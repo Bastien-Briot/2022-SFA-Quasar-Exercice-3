@@ -50,11 +50,11 @@
   </q-card-section>
 
   <q-card-actions align="right">
-    <q-btn
+    <q-btn unelevated rounded
       label="Annuler"
       color="grey"
       v-close-popup />
-    <q-btn
+    <q-btn unelevated rounded
       label="Sauver"
       color="primary"
       v-close-popup />
@@ -81,6 +81,10 @@ export default {
 <style>
 .form-card {
   min-width: 400px;
+  border-radius: 20px;
+}
+.q-dialog__inner > div {
+  border-radius: 15px;
 }
 .form-card .heading {
   text-transform: capitalize;
@@ -95,7 +99,7 @@ export default {
 .form-card .q-img {
   height: 56px;
   width: 56px;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 .form-card .q-img__image {
   background-size: cover !important;
@@ -106,4 +110,9 @@ export default {
 .form-card .q-rating__icon--active {
   opacity: 1;
 }
+
+.card-clickable:hover {
+  background: #bdbdbd!important;
+}
+
 </style>
