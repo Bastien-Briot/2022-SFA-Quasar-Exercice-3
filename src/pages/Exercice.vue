@@ -3,10 +3,10 @@
   Exercice 3 - Vuex & Formulaires
 
   1) Créer un magasin, module, Vuex avec le namespace "plats" pour les plats
-     dans src/store/ et y ajouter le tableau des plats.
+     dans src/store/ et y ajouter le tableau des plats. ^
 
   2) Créer un getter pour récupérer les plats
-     et afficher ces derniers sur la page Exercice.vue à l'aide du getter
+     et afficher ces derniers sur la page Exercice.vue à l'aide du getter ^
 
   3) Ajouter la possibilité de supprimer un élément (clic sur bouton supprimer)
      en utilisant des actions et des mutations.
@@ -47,41 +47,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data () {
     return {
-      plats: [
-        {
-          id: 1,
-          image: 'https://st.depositphotos.com/1026029/1625/i/600/depositphotos_16253263-stock-photo-italian-pizza-with-mushrooms-and.jpg',
-          nom: 'Pizza',
-          description: 'La pizza est un plat savoureux d\'origine italienne, consistant en une base généralement ronde et aplatie depâte levée à base de blé.',
-          note: 5
-        },
-        {
-          id: 2,
-          image: 'https://grindburgerbar.com/wp-content/uploads/2021/10/Webp.net-resizeimage-74.jpg',
-          nom: 'Burger',
-          description: 'Un hamburger est un sandwich composé d\'une ou plusieurs tranches de viande hachée, généralement du bœuf, placées dans un petit pain.',
-          note: 4
-        },
-        {
-          id: 3,
-          image: 'https://cnz.to/vf/wp-content/uploads/2009/02/brussels_sprouts.jpg',
-          nom: 'Petits choux',
-          description: 'Le chou de Bruxelles est une variété de chou, plante herbacée de la famille des Brassicaceae. C’est vraiment pas bon...',
-          note: 4
-        },
-        {
-          id: 4,
-          image: 'https://i.imgur.com/1cX2to7.jpeg',
-          nom: 'Lasagne',
-          description: 'Les lasagnes sont un plat italien composé de couches de pâtes, de sauce bolognaise, de béchamel et de fromage, cuites au four.',
-          note: 5
-        }
-      ],
       afficherFormPlat: false
     }
+  },
+  computed: {
+    ...mapGetters('plats', ['plats'])
   },
   components: {
     plat: require('components/Plat.vue').default,
