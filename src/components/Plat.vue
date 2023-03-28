@@ -33,7 +33,7 @@
       icon="edit"
       color="blue"
       flat>Modifier</q-btn>
-    <q-btn unelevated rounded @click="supprimerPlat(plat.id)"
+    <q-btn unelevated rounded @click.stop="ConfirmsupprimerPlat(plat.id)"
       icon="delete"
       color="red"
       flat>Supprimer</q-btn>
@@ -61,14 +61,14 @@ export default {
   },
   methods: {
     ...mapActions('plats', ['supprimerPlat']),
-    supprimerPlat (id) {
+    ConfirmsupprimerPlat (id) {
       this.$q.dialog({
         title: 'Confirm',
         message: 'Voulez-vous vraiment supprimer ce plat ?',
         cancel: true,
         persistent: true
       }).onOk(() => {
-        console.log('Supprimer')
+        this.supprimerPlat(id)
       })
     }
   }

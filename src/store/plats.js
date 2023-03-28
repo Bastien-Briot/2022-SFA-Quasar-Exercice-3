@@ -37,14 +37,18 @@ Mutations : méthode qui manipulent les données
 Les mutations ne peuvent pas être asynchrones !!!
  */
 const mutations = {
-
+  supprimerPlat (state, id) {
+    state.plats = state.plats.filter(el => el.id !== id)
+  }
 }
 /*
 Actions : méthodes du magasin qui font appel aux mutations
 Elles peuvent être asynchrones !
  */
 const actions = {
-
+  supprimerPlat ({ commit }, id) {
+    commit('supprimerPlat', id)
+  }
 }
 
 /*
