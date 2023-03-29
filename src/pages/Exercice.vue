@@ -10,7 +10,7 @@
 
   3) Ajouter la possibilité de supprimer un élément (clic sur bouton supprimer)
      en utilisant des actions et des mutations.
-     Afficher une dialog de confirmation avant de supprimer.
+     Afficher une dialog de confirmation avant de supprimer. ^
 
   4) Ajouter une validation au formulaire src/components/FormPlat.vue
        - nom: obligatoire avec un maximum de 20 caractères.
@@ -41,7 +41,10 @@
 
     <q-dialog
       v-model="afficherFormPlat">
-      <form-plat action="ajouter" />
+      <form-plat
+        @fermer="afficherFormPlat = false"
+        action="ajouter"
+      />
     </q-dialog>
   </q-page>
 </template>

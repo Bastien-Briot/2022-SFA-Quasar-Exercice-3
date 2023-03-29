@@ -39,6 +39,9 @@ Les mutations ne peuvent pas être asynchrones !!!
 const mutations = {
   supprimerPlat (state, id) {
     state.plats = state.plats.filter(el => el.id !== id)
+  },
+  ajouterPlat (state, plat) {
+    state.plats.push(plat)
   }
 }
 /*
@@ -48,6 +51,18 @@ Elles peuvent être asynchrones !
 const actions = {
   supprimerPlat ({ commit }, id) {
     commit('supprimerPlat', id)
+  },
+  ajouterPlat ({ commit }, plat) {
+    let uId = 1
+    // Si le tableau contient des éléments
+    if (state.plats.length) {
+      // Récupère l'id MAX et lui ajoute 1
+      uId = Math.max(...state.plats.map(plat => plat.id)) + 1
+    }
+    // Ajoute le nouvel id à la tache
+    plat.id = uId
+    // Commite l'ajout
+    commit('ajouterPlat', plat)
   }
 }
 

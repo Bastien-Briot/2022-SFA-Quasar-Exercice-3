@@ -11,7 +11,8 @@
         filled
         v-model="plat.nom"
         label="Nom (Burger)"
-        class="col" />
+        class="col"
+        :rules="[val => !!val || 'Le nom est obligatoire', val => val.length < 21 || 'Maximum 20 caractères']"/>
     </div>
 
     <div class="row q-mb-md">
@@ -20,7 +21,8 @@
         v-model="plat.description"
         label="Description"
         type="textarea"
-        class="col" />
+        class="col"
+        :rules="[val => val.length < 156 || 'Maximum 155 caractères']"/>
     </div>
 
     <div class="row q-mb-md">
@@ -57,12 +59,14 @@
     <q-btn unelevated rounded
       label="Sauver"
       color="primary"
-      v-close-popup />
+      @click="envoyerForm"/>
   </q-card-actions>
 </q-card>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: ['action'],
   data () {
@@ -73,6 +77,15 @@ export default {
         note: 1,
         image: ''
       }
+    }
+  },
+  methods: {
+    ...mapActions('plats', ['ajouterPlat']),
+    envoyerForm () {
+      // Création d'un plat
+      this.ajouterPlat(this.plat)
+      // Fermeture du dialog
+      this.$emit('fermer')
     }
   }
 }
