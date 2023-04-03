@@ -2,7 +2,7 @@
 <q-card
   class="card">
   <q-img
-    :src="plat.image"
+    :src="plat.image ? plat.image : require('../assets/image-placeholder.jpg')"
     basic
     contain
   >
@@ -22,7 +22,8 @@
   </q-card-section>
 
   <q-card-section class="description">
-    {{ plat.description }}
+    <div v-if="plat.description">{{ plat.description }}</div>
+    <i v-else>Aucune descripion fournie.</i>
   </q-card-section>
 
   <q-card-actions
@@ -41,7 +42,10 @@
 
   <q-dialog
     v-model="afficherFormPlat">
-    <form-plat action="modifier" />
+    <form-plat
+      action="modifier"
+      :platAModifier="plat"
+      @fermer="afficherFormPlat = false"/>
   </q-dialog>
 </q-card>
 </template>
