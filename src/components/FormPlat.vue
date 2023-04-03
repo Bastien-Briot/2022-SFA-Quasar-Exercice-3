@@ -88,13 +88,17 @@ export default {
   methods: {
     ...mapActions('plats', ['ajouterPlat', 'modifierPlat']),
     envoyerForm () {
+      // Récupères la référence des rules
       const isValidNom = this.$refs.nom.validate()
       const isValidDescription = this.$refs.description.validate()
 
+      // Vérifie si les règles sont correctes
       if (isValidNom && isValidDescription) {
+        // Fais l'action définit (modifier ou ajouter) et ferme la fenêtre
         this.actionPlat(this.plat)
         this.$emit('fermer')
       } else {
+        // Notification d'une erreur
         this.$q.notify({
           color: 'negative',
           message: 'Il y a des erreurs dans le formulaire. Veuillez les corriger avant de sauvegarder.',
@@ -103,6 +107,7 @@ export default {
       }
     },
     actionPlat (plat) {
+      // Function par rapport à l'action
       if (this.action === 'modifier') {
         this.modifierPlat(plat)
       } else {
@@ -111,6 +116,7 @@ export default {
     }
   },
   mounted () {
+    // Liaison à la carte qu'on modifie
     if (this.action === 'modifier') {
       this.plat = Object.assign({}, this.platAModifier)
     }

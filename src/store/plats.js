@@ -38,14 +38,17 @@ Les mutations ne peuvent pas être asynchrones !!!
  */
 const mutations = {
   supprimerPlat (state, id) {
+    // Supprime le plat du store
     state.plats = state.plats.filter(el => el.id !== id)
   },
   ajouterPlat (state, plat) {
+    // Ajoute le plat au store
     state.plats.push(plat)
   },
   modifierPlat (state, plat) {
+    // Récupère l'index du plat
     const index = state.plats.findIndex(el => el.id === plat.id)
-    console.log(index, typeof plat.id)
+    // Si l'index est valide modifie le plat
     if (index !== -1) {
       Object.assign(state.plats[index], plat)
     }
@@ -57,6 +60,7 @@ Elles peuvent être asynchrones !
  */
 const actions = {
   supprimerPlat ({ commit }, id) {
+    // Commite la suppression
     commit('supprimerPlat', id)
   },
   ajouterPlat ({ commit }, plat) {
@@ -72,6 +76,7 @@ const actions = {
     commit('ajouterPlat', plat)
   },
   modifierPlat ({ commit }, id) {
+    // Commite la modification
     commit('modifierPlat', id)
   }
 }
@@ -83,6 +88,7 @@ Sert à calculer, trier, filtrer ou formater les donneés
  */
 const getters = {
   plats: (state) => {
+    // Récupère la liste des plats
     return state.plats
   }
 
