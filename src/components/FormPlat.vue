@@ -12,7 +12,12 @@
         v-model="plat.nom"
         label="Nom (Burger)"
         class="col"
-        :rules="[val => !!val || 'Le nom est obligatoire', val => val.length < 21 || 'Maximum 20 caractères']"/>
+        ref="nom"
+        :rules="[
+          val => !!val || 'Le nom est obligatoire',
+          val => val.length < 21 || 'Maximum 20 caractères',
+        ]"
+      />
     </div>
 
     <div class="row q-mb-md">
@@ -22,6 +27,7 @@
         label="Description"
         type="textarea"
         class="col"
+        ref="description"
         :rules="[val => val.length < 156 || 'Maximum 155 caractères']"/>
     </div>
 
@@ -32,7 +38,7 @@
         label="URL de l'image"
         class="col" />
       <q-img
-        :src="plat.image ? plat.image : 'statics/image-placeholder.png'"
+        :src="plat.image ? plat.image : require('../assets/image-placeholder.jpg')"
         class="q-ml-sm"
         contain />
     </div>
@@ -68,7 +74,7 @@
 import { mapActions } from 'vuex'
 
 export default {
-  props: ['action'],
+  props: ['action', 'platAModifier'],
   data () {
     return {
       plat: {
@@ -80,12 +86,33 @@ export default {
     }
   },
   methods: {
-    ...mapActions('plats', ['ajouterPlat']),
+    ...mapActions('plats', ['ajouterPlat', 'modifierPlat']),
     envoyerForm () {
-      // Création d'un plat
-      this.ajouterPlat(this.plat)
-      // Fermeture du dialog
-      this.$emit('fermer')
+      const isValidNom = this.$refs.nom.validate()
+      const isValidDescription = this.$refs.description.validate()
+
+      if (isValidNom && isValidDescription) {
+        this.actionPlat(this.plat)
+        this.$emit('fermer')
+      } else {
+        this.$q.notify({
+          color: 'negative',
+          message: 'Il y a des erreurs dans le formulaire. Veuillez les corriger avant de sauvegarder.',
+          icon: 'warning'
+        })
+      }
+    },
+    actionPlat (plat) {
+      if (this.action === 'modifier') {
+        this.modifierPlat(plat)
+      } else {
+        this.ajouterPlat(plat)
+      }
+    }
+  },
+  mounted () {
+    if (this.action === 'modifier') {
+      this.plat = Object.assign({}, this.platAModifier)
     }
   }
 }
