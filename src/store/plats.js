@@ -42,6 +42,13 @@ const mutations = {
   },
   ajouterPlat (state, plat) {
     state.plats.push(plat)
+  },
+  modifierPlat (state, plat) {
+    const index = state.plats.findIndex(el => el.id === plat.id)
+    console.log(index, typeof plat.id)
+    if (index !== -1) {
+      Object.assign(state.plats[index], plat)
+    }
   }
 }
 /*
@@ -63,6 +70,9 @@ const actions = {
     plat.id = uId
     // Commite l'ajout
     commit('ajouterPlat', plat)
+  },
+  modifierPlat ({ commit }, id) {
+    commit('modifierPlat', id)
   }
 }
 
