@@ -2,7 +2,7 @@
 <q-card
   class="card">
   <q-img
-    :src="plat.image"
+    :src="plat.image ? plat.image : require('../assets/image-placeholder.jpg')"
     basic
     contain
   >
@@ -22,18 +22,19 @@
   </q-card-section>
 
   <q-card-section class="description">
-    {{ plat.description }}
+    <div v-if="plat.description">{{ plat.description }}</div>
+    <i v-else>Aucune descripion fournie.</i>
   </q-card-section>
 
   <q-card-actions
     class="absolute-bottom"
     align="right">
-    <q-btn
+    <q-btn unelevated rounded
       @click="afficherFormPlat = true"
       icon="edit"
       color="blue"
       flat>Modifier</q-btn>
-    <q-btn
+    <q-btn unelevated rounded @click.stop="ConfirmsupprimerPlat(plat.id)"
       icon="delete"
       color="red"
       flat>Supprimer</q-btn>
@@ -41,12 +42,17 @@
 
   <q-dialog
     v-model="afficherFormPlat">
-    <form-plat action="modifier" />
+    <form-plat
+      action="modifier"
+      :platAModifier="plat"
+      @fermer="afficherFormPlat = false"/>
   </q-dialog>
 </q-card>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   props: ['plat'],
   data () {
@@ -56,36 +62,76 @@ export default {
   },
   components: {
     'form-plat': require('components/FormPlat.vue').default
+  },
+  methods: {
+    ...mapActions('plats', ['supprimerPlat']),
+    ConfirmsupprimerPlat (id) {
+      this.$q.dialog({
+        title: 'Confirm',
+        message: 'Voulez-vous vraiment supprimer ce plat ?',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.supprimerPlat(id)
+      })
+    }
   }
 }
 </script>
 
 <style>
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
 .card {
-  min-height: 400px;
-  max-width: 250px;
-  width: 250px;
-  transition: background 0.3s;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
-.card-clickable {
-  cursor: pointer;
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 15px;
 }
-.card-clickable:hover {
-  background: #bdbdbd!important;
+
+.text-h6 {
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
 }
-.card .q-img {
-  max-height: 180px;
+
+.description {
+  font-size: 1rem;
+  margin: 0 1rem 3rem 1rem;
+  line-height: 1.5;
 }
-.card .q-img__image {
-  background-size: cover !important;
+
+.card p:last-of-type {
+  margin-bottom: 1rem;
 }
+
+.btn {
+  margin: 1rem 2rem;
+  align-content: center;
+  width: 80%;
+}
+
 .card .q-rating__icon {
-  opacity: 0.2;
+  opacity: 0.3;
 }
 .card .q-rating__icon--active {
   opacity: 1;
-}
-.card .description {
-  padding: 5px 16px;
 }
 </style>

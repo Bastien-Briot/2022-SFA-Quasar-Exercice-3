@@ -11,7 +11,13 @@
         filled
         v-model="plat.nom"
         label="Nom (Burger)"
-        class="col" />
+        class="col"
+        ref="nom"
+        :rules="[
+          val => !!val || 'Le nom est obligatoire',
+          val => val.length < 21 || 'Maximum 20 caractères',
+        ]"
+      />
     </div>
 
     <div class="row q-mb-md">
@@ -20,7 +26,9 @@
         v-model="plat.description"
         label="Description"
         type="textarea"
-        class="col" />
+        class="col"
+        ref="description"
+        :rules="[val => val.length < 156 || 'Maximum 155 caractères']"/>
     </div>
 
     <div class="row q-mb-md">
@@ -30,7 +38,7 @@
         label="URL de l'image"
         class="col" />
       <q-img
-        :src="plat.image ? plat.image : 'statics/image-placeholder.png'"
+        :src="plat.image ? plat.image : require('../assets/image-placeholder.jpg')"
         class="q-ml-sm"
         contain />
     </div>
@@ -50,21 +58,23 @@
   </q-card-section>
 
   <q-card-actions align="right">
-    <q-btn
+    <q-btn unelevated rounded
       label="Annuler"
       color="grey"
       v-close-popup />
-    <q-btn
+    <q-btn unelevated rounded
       label="Sauver"
       color="primary"
-      v-close-popup />
+      @click="envoyerForm"/>
   </q-card-actions>
 </q-card>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  props: ['action'],
+  props: ['action', 'platAModifier'],
   data () {
     return {
       plat: {
@@ -74,6 +84,42 @@ export default {
         image: ''
       }
     }
+  },
+  methods: {
+    ...mapActions('plats', ['ajouterPlat', 'modifierPlat']),
+    envoyerForm () {
+      // Récupères la référence des rules
+      const isValidNom = this.$refs.nom.validate()
+      const isValidDescription = this.$refs.description.validate()
+
+      // Vérifie si les règles sont correctes
+      if (isValidNom && isValidDescription) {
+        // Fais l'action définit (modifier ou ajouter) et ferme la fenêtre
+        this.actionPlat(this.plat)
+        this.$emit('fermer')
+      } else {
+        // Notification d'une erreur
+        this.$q.notify({
+          color: 'negative',
+          message: 'Il y a des erreurs dans le formulaire. Veuillez les corriger avant de sauvegarder.',
+          icon: 'warning'
+        })
+      }
+    },
+    actionPlat (plat) {
+      // Function par rapport à l'action
+      if (this.action === 'modifier') {
+        this.modifierPlat(plat)
+      } else {
+        this.ajouterPlat(plat)
+      }
+    }
+  },
+  mounted () {
+    // Liaison à la carte qu'on modifie
+    if (this.action === 'modifier') {
+      this.plat = Object.assign({}, this.platAModifier)
+    }
   }
 }
 </script>
@@ -81,6 +127,10 @@ export default {
 <style>
 .form-card {
   min-width: 400px;
+  border-radius: 20px;
+}
+.q-dialog__inner > div {
+  border-radius: 15px;
 }
 .form-card .heading {
   text-transform: capitalize;
@@ -95,7 +145,7 @@ export default {
 .form-card .q-img {
   height: 56px;
   width: 56px;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 .form-card .q-img__image {
   background-size: cover !important;
@@ -106,4 +156,9 @@ export default {
 .form-card .q-rating__icon--active {
   opacity: 1;
 }
+
+.card-clickable:hover {
+  background: #bdbdbd!important;
+}
+
 </style>
